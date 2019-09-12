@@ -49,6 +49,6 @@ netSens is a system for collecting, processing and presenting network informatio
 ## 📝 License
 
 Copyright © 2019 [netSens](https://github.com/cyberj19/netsens).<br />
-This project is MIT licensed.
+This project is [MIT](https://github.com/netSensTeam/netSens/blob/master/LICENSE) licensed.
 
 > *"The quieter you become the more you are able to hear"* ~ Ram Dass
