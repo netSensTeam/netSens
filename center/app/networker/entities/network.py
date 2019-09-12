@@ -46,7 +46,7 @@ class Network(models.Model):
     def processPacket(self, pkt):
         self.addPacket(pkt)
         for aspect in pkt.aspects:
-            #logger.debug('aspect: %s', aspect.serialize())
+            logger.debug('aspect: %s', aspect.serialize())
             self.processAspect(aspect, pkt.time)
     
     def processAspect(self, asp, time):

@@ -2,7 +2,7 @@ mode = "live"
 # test_file = "agent/pcap_files/test.pcap"
 shark_path = "C:\\Program Files\\Wireshark\\tshark.exe"
 # iface = "enxb827eb6c633a"
-iface = "1"
+iface = "6"
 
 output_folder = "../runtime/data/listener"
 logs_folder = "../runtime/logs/listener"
