@@ -1,0 +1,10 @@
+{
+    "$name": "AspectDevice",
+    "uuid": {"generator": "uuid"}, 
+    "idx": {"default": -1}, 
+    "ip": {"default": null}, 
+    "mac": {"default": null}, 
+    "hostname": {"default": null},
+    "extraData": {"default": {}},
+    "roles": {"mult": "array", "default": []}
+}
