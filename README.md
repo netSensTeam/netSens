@@ -7,7 +7,7 @@ netSens is a system for collecting, processing and presenting network informatio
 * Written in Python and JavaScript.
 * Based on open shelf products.
 * Generic and modular-oriented development - an infrastructure that allows easy integration of new capabilities within the product and interfaces with external services.
-<img src="https://github.com/cyberj19/netsens/blob/master/netsens.jpg" alt="Screenshot of netsens" width="560"/>
+<img src="https://github.com/netSensTeam/netSens/blob/master/netsens.jpg" alt="Screenshot of netsens" width="560"/>
 
 ## ⭐️ Features
 - Cross-Platform (Linux, Windows)
