@@ -34,6 +34,15 @@ function buildHtmlTable(selector,objects) {
 				var cellValue = "-";
 			if (columns[j]=="lts")
 				cellValue=timeConvert(cellValue);
+			else if (columns[j]=="status")
+			{
+				var millis = Date.now() - objects[i]['lts'];
+				if (millis<6000)
+					cellValue='<img src="img/ok.png" style="height: 20px;">'
+				else 
+					cellValue='<img src="img/error.png" style="height: 10px;">'
+			}
+
 			else
 				cellValue = cellValue.toString();
 			row$.append($('<td/>').html(cellValue));
@@ -46,7 +55,7 @@ function addAllColumnHeaders(objects, selector) {
 	var columnSet = [];
 	var headerTr$ = $('<thead style="background-color:#25a9af; color:white;"/>');
 	headerTr$.append($('<tr/>'));
-	columnSet=['name','lts']
+	columnSet=['name','lts','status']
 	for (var col in columnSet){
 		if (columnSet[col] == "lts")
 			headerTr$.append($('<th/>').html("lastTimeSeen"));
