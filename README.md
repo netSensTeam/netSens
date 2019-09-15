@@ -1,3 +1,11 @@
+<img src="https://github.com/netSensTeam/netSens/blob/master/netsens_logo1.jpg" alt="netsens_logo"/>
+
+<p align="center">
+<a href="https://github.com/netSensTeam/netSens/issues"><img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"></a>
+<a href="https://github.com/netSensTeam/netSens/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
+</p>
+
+
 # netSens
 
 
@@ -38,6 +46,7 @@ netSens is a system for collecting, processing and presenting network informatio
 - explore the created network by going to networks tab. use filter if needed.
 
 ## 🤝 Authors
+netSens was initially developed as a final project at MTA (The Academic College of Tel Aviv-Yaffo) by:
 
  **Jacob Roginsky**
 - Github: [@cyberj19](https://github.com/cyberj19)
