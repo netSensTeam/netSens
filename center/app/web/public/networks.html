@@ -48,6 +48,11 @@
           <i class="fas fa-fw fa-network-wired"></i>
           <span>Networks</span></a>
       </li>
+	  <li class="nav-item">
+        <a class="nav-link" href="monitor.html" style="padding-bottom:0px; padding-top:10px;">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Monitor</span></a>
+      </li>
     </ul>
     <!-- End of Sidebar -->
 
@@ -101,7 +106,8 @@
 				 <label style="font-size:11px;font-weight:700;margin-bottom:0px;">Filters</label>
 				<input type="text" id="NetworkIds" style="font-size:11px;" placeholder="All Networks"/>
 			</div>
-			<button onclick="applyFilters()" style="font-size: 11px;font-weight: 700;height: 28px;margin-top: 28px;" class="btn btn-primary">Apply</button>
+			<div class="col-lg-1"><button onclick="applyFilters()" style="font-size: 11px;font-weight: 700;height: 28px;margin-top: 28px;" class="btn btn-primary">Apply</button></div>
+			 <button onclick="applyFilters('true')" style="font-size: 11px;font-weight: 700;height: 28px;margin-top: 28px;" class="btn btn-secondary">Reset</button>
 		  </div>
 		  <div class="row">
 			<div class="col-lg-12">
