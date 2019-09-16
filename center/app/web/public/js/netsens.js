@@ -68,8 +68,6 @@ function isNeighborLink(node, link) {
 }
 
 function getNodeColor(node, neighbors) {
-	console.log('bzzzzzzzzzzzzzz');
-	console.log(JSON.stringify(node.roles));
 	if (Array.isArray(neighbors) && neighbors.indexOf(node.uuid) > -1) 
 		if (node.roles == "gateway")
 		{
@@ -79,15 +77,15 @@ function getNodeColor(node, neighbors) {
 		{
 			if (JSON.stringify(node.extraData).includes('android'))
 				return 'url(#androidSelectedImage)';
-			else if (JSON.stringify(node.extraData).includes('apple'))
-				return 'url(#appleImage)';
+			else if ((JSON.stringify(node.extraData).includes('apple'))||(JSON.stringify(node.extraData).includes('Apple')))
+				return 'url(#appleSelectedImage)';
 			return 'url(#desktopSelectedImage)';
 		}
 	if (node.roles == "gateway")
 		return 'url(#gatewayImage)';
 	else if (JSON.stringify(node.extraData).includes('android'))
 		return 'url(#androidImage)';
-	else if (JSON.stringify(node.extraData).includes('apple'))
+	else if ((JSON.stringify(node.extraData).includes('apple'))||(JSON.stringify(node.extraData).includes('Apple')))
 		return 'url(#appleImage)';
 	return 'url(#desktopImage)';
 }
@@ -98,7 +96,7 @@ function getNodeColor(node) {
 		return 'url(#gatewayImage)';
 	else if (JSON.stringify(node.extraData).includes('android'))
 		return 'url(#androidImage)';
-	else if (JSON.stringify(node.extraData).includes('apple'))
+	else if ((JSON.stringify(node.extraData).includes('apple'))||(JSON.stringify(node.extraData).includes('Apple')))
 		return 'url(#appleImage)';
 	return 'url(#desktopImage)';
 }
@@ -108,7 +106,7 @@ function getNodeSelectedColor(node) {
 		return 'url(#gatewaySelectedImage)';
 	else if (JSON.stringify(node.extraData).includes('android'))
 		return 'url(#androidSelectedImage)';
-	else if (JSON.stringify(node.extraData).includes('apple'))
+	else if ((JSON.stringify(node.extraData).includes('apple'))||(JSON.stringify(node.extraData).includes('Apple')))
 		return 'url(#appleSelectedImage)';
 	return 'url(#desktopSelectedImage)';
 }
@@ -175,7 +173,6 @@ function deviceComment(networkId,uuid){
 		$("#devicesTable").css("visibility","hidden");
 		$('#commentModalClose').click();
 		sleep(7000).then(() => {
-			console.log(networksFilter);
 			loadData(networksFilter,false);
 		});
 		
@@ -237,9 +234,7 @@ function goToNode(nodeUUID){
 		$("#" + devices[d].uuid).css('stroke','#25a9af');
 		$("#" + devices[d].uuid).css('stroke-width','1');
 	}
-	console.log('b');
 	$('body,html').animate({scrollTop: 80}, 1000);
-	console.log('c');
 	var device = findElement(devices,"uuid",nodeUUID);
 	$("#" + nodeUUID).css('fill', function (n) { return getNodeSelectedColor(device)});
 	$("#" + nodeUUID).css('stroke','#4e73df');
@@ -289,21 +284,42 @@ function loadJSON(file,callback) {
     xobj.send(null);
  }
  
-function applyFilters(){
-	networksFilter = [];
-	var networksNames = $("#NetworkIds").val().replace(' ','').split(',');
-	for (netN in networksNames)
+function applyFilters(resetFilter = 'false'){
+	if (resetFilter == 'true')
 	{
-		for (net in networks)
+		for (net in networkNames)
+			document.getElementById("chb" + networkNames[net]).checked = false;
+		document.getElementById("NetworkIds").value = "";
+		$("#svg").empty();
+		devices = "";
+		links = "";
+		loadData(null);
+		networksFilter = [];
+		comboTree1.resetSelection();
+		comboTree1.resetLookup();
+	}
+	else
+	{
+		networksFilter = [];
+		var networksNames = $("#NetworkIds").val().replace(/\s/g, '').split(',');
+		for (netN in networksNames)
+			for (net in networks)
+				if (networksNames[netN] == networks[net]["name"])
+					networksFilter.push(networks[net]["uuid"])
+		$("#svg").empty();
+		devices = "";
+		links = "";
+		loadData(networksFilter);
+		if (networksFilter.length == networks.length)
 		{
-			if (networksNames[netN] == networks[net]["name"])
-				networksFilter.push(networks[net]["uuid"])
+			for (net in networkNames)
+				document.getElementById("chb" + networkNames[net]).checked = false;
+			document.getElementById("NetworkIds").value = "";
+			networksFilter = [];
+			comboTree1.resetLookup();
+			comboTree1.resetSelection();
 		}
 	}
-	$("#svg").empty();
-	devices = "";
-	links = "";
-	loadData(networksFilter);
 }
 
 function printGraph(networksFilter){
@@ -487,8 +503,6 @@ function loadData(networksFilter,updateGraph = true){
 	{
 		if (networksFilter != null)
 		{
-			console.log('filter applied');
-			console.log(networksFilter);
 			if (networksFilter.includes(networks[i]['uuid'].toString())){
 				networkNames.push(networks[i]['uuid'].toString());
 				networkIds.push(networks[i]['uuid'].toString());

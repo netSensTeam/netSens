@@ -10,7 +10,7 @@ function timeConvert(time){
 	var date = new Date(time*1000);
 	var minutes = "0" + date.getMinutes();
 	var seconds = "0" + date.getSeconds();
-	var newTime = date.getDate() + '/' + date.getMonth()+'/' + date.getYear().toString().substr(-2) + ' ' + date.getHours() + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+	var newTime = date.getDate() + '/' + (date.getMonth()+1)+'/' + date. getFullYear().toString()+ ' ' + date.getHours() + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
 	return newTime;
 }
 
@@ -36,8 +36,9 @@ function buildHtmlTable(selector,objects) {
 				cellValue=timeConvert(cellValue);
 			else if (columns[j]=="status")
 			{
-				var millis = Date.now() - objects[i]['lts'];
-				if (millis<6000)
+				var d =  Date.now();
+				var millis = parseInt(d) / 1000 - parseInt(objects[i]['lts']);
+				if (millis<10000)
 					cellValue='<img src="img/ok.png" style="height: 20px;">'
 				else 
 					cellValue='<img src="img/error.png" style="height: 10px;">'
