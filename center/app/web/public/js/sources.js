@@ -168,19 +168,3 @@ function loadData(){
 	$("#NetworksTable").css("visibility","visible");
 
 }	
-//function Connect(btn){
-//	console.log(btn.id);
-//    $.post("/api/sensors/" + btn.id.substr(8,17) + "/"+btn.id.substr(26)+"/connect",
-//    {},function(data,status){alert("Data: " + data + "\nStatus: " + status);}
-//	);
-//};
-  
-//function Disconnect(btn){
-//	alert('in');
-//	console.log(btn.id);
-//    $.post("/api/sensors/" + btn.id.substr(8,17) + "/"+btn.id.substr(26)+ "/guid/disconnect",
-//    {}//,
-//    //function(data,status){
-//      //alert("Data: " + data + "\nStatus: " + status);}
-//	);
-//};
