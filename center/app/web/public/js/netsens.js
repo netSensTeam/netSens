@@ -326,8 +326,6 @@ function printGraph(networksFilter){
 	var svg = d3.select("#devicesGraph")
 		.append("svg")
 		.attr("id","gs")
-		//.attr("width", window.innerWidth- 252 - 75)
-		//.attr("height", 450)
 	    .attr("viewBox", [0, 0, window.innerWidth - 252 - 75, 350]);
 
 	var dragDrop = d3.drag().on('start', function (node) {
@@ -453,12 +451,6 @@ function printGraph(networksFilter){
 				}
 			}
 			
-			//var ad = document.createElement('div');
-			//ad.setAttribute("id", "ad");
-			//ad.innerHTML = '<div id="filters" class="row" style="visibility:visible"><div class="col-lg-6"><label style="font-size:11px;font-weight:700;margin-bottom:0px;">Filters</label><input type="text" id="NetworkIds" style="font-size:11px;" placeholder="' + filtersName.toString() +'"/></div><div class="col-lg-2"><button onclick="applyFilters()" style="font-size: 11px;font-weight: 700;height: 28px;margin-top: 28px;" class="btn btn-primary">Apply</button></div></div>';	
-			//foreignObject.appendChild( ad );
-			//gs.appendChild(foreignObject);
-			//combo();
 				
           // This function is run at each iteration of the force algorithm, updating the nodes position.
 	  function ticked() {
