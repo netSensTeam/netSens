@@ -1,5 +1,7 @@
-name = 'packets_buffer'
+name = 'process_packets_buffer'
 topic = 'packetsBuffer'
+
+import time
 from entities.network import Network
 from entities.packet import Packet
 
@@ -49,19 +51,26 @@ def updateOriginNetwork(old_net_uuid, new_net_uuid):
         upsert=False)
 
 def process(packets_buffer):
-    logger.info('Processing new packet buffer')
+    logger.info('Processing new packet buffer with %d packets' % packets_buffer['numPackets'])
+    start_time = time.time()
     network_queue = []
     org_uuid = packets_buffer['origin']
     packets = [Packet(pkt) for pkt in packets_buffer['packets']]
     dest_uuid = getDestinationNetwork(org_uuid)
     with NetworkLock(dest_uuid) as net:
+        net_start_time = time.time()
         net.process(packets)
+        elapsed_time = time.time() - net_start_time
+        logger.debug('Processing time for new network was %f seconds' % elapsed_time)
         if net.reprocess:
             network_queue.append(net)
             net.reprocess = False
     altered_networks = processNetworkQueue(network_queue)
-    publishAlteredNetworks(altered_networks)
+    elapsed_time = time.time() - start_time
+    logger.debug('Total processing time was %f seconds. Number of altered networks was %d' % (elapsed_time, len(altered_networks)))
 
+    publishAlteredNetworks(altered_networks)
+    
 def getDestinationNetwork(org_uuid):
     dest_uuid = getNetworkForOrigin(org_uuid)
     if not dest_uuid:
@@ -93,10 +102,13 @@ def processNetworkQueue(network_queue):
         nex = network_queue.pop(0)
         with NetworkLock(nex.uuid):
             merge_uuid = findNetworkMatch(nex)
-            if merge_uuid:
-                with NetworkLock(merge_uuid) as merge_net:
-                    mergeNetworks(merge_net, nex, altered_networks)
-                    if merge_net.reprocess:
-                        network_queue.append(merge_net)
-                        merge_net.reprocess = False
+            
+            if not merge_uuid:
+                continue
+
+            with NetworkLock(merge_uuid) as merge_net:
+                mergeNetworks(merge_net, nex, altered_networks)
+                if merge_net.reprocess:
+                    network_queue.append(merge_net)
+                    merge_net.reprocess = False
     return altered_networks
