@@ -10,6 +10,7 @@ for module_file in os.listdir(os.path.dirname(__file__)):
         continue
     print('importing parser: %s' % module_file)
     module = importlib.import_module('.' + module_file[:-3], package='parsers')
+    module.logger = logger
     print('loaded parser: %s' % module.name)
     parsers.append(module.parseFunc)
 del module_file, module

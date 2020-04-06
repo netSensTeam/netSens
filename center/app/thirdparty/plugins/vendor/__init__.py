@@ -37,9 +37,9 @@ import requests
 url = 'https://api.macvendors.com'
 
 def getVendorFromAPI(macAddress):
-    api = "/%s" % macAddress
+    api = "%s/%s" % (url, macAddress)
     try:
-        data = requests.get(url).text
+        data = requests.get(api).text
         if not data:
             logger.error('API ERROR')
         return data

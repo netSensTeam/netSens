@@ -15,6 +15,7 @@
 		"cmd": "python web"
 	},
 	{
+		"active": true,
 		"name": "PLAYBACK",
 		"execPath": "app",
 		"cmd": "python playback"
@@ -30,6 +31,7 @@
 		"cmd": "python monitor"
 	},
 	{
+		"active": false,
 		"name": "THIRD_PARTY",
 		"execPath": "app",
 		"cmd": "python thirdparty"

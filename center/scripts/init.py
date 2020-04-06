@@ -44,6 +44,8 @@ shutil.copyfile('app/web/env_%s.py' % env_file, 'app/web/env.py')
 
 
 for service in services:
+	if 'active' in service and not service['active']:
+		continue
 	print('starting service: %s' % service['name'])
 	os.chdir(service['execPath'])
 	cmd = service['cmd'].replace('%rd%', root_dir).split(' ')

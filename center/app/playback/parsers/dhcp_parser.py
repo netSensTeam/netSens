@@ -1,6 +1,7 @@
 import dpkt
 from parsers.utils import *
 name = 'dhcp_parser'
+logger = None
 
 def parseFunc(ts, eth):
     if isinstance(eth.data, dpkt.ip.IP):
@@ -16,16 +17,27 @@ def getDHCPOption(dhcp, opt_code):
             return opt[1]
     return None
 
+def bytesToString(barr):
+    return [str(barr[i]) for i in range(len(barr))]
+
+def bytesToIntArray(barr):
+    return [int(str(barr[i])) for i in range(len(barr))]
+
 def parseDHCPPacket(ts, eth):
     try:
         ip  = eth.data
         udp = ip.data
         dh  = dpkt.dhcp.DHCP(udp.data)
         src = getMACString(eth.src)
-        dhcp_type = ord(getDHCPOption(dh,53))
-        dhcp_fp = [ord(c) for c in getDHCPOption(dh,55)]
-        hostname = getDHCPOption(dh,12)
-        VCI = getDHCPOption(dh, 60)
+        logger.debug('extracting dhcp finger print from packet')
+
+        opt_53 = getDHCPOption(dh, 53)
+        dhcp_type = int.from_bytes(opt_53, byteorder='big')
+        opt_55 = getDHCPOption(dh, 55)
+        dhcp_fp = bytesToIntArray(opt_55)
+        hostname = getDHCPOption(dh, 12).decode("utf-8")
+        VCI = getDHCPOption(dh, 60).decode("utf-8")
+        print(hostname)
         if dhcp_type == 1:
             description = 'dhcp discover from %s' % src
         elif dhcp_type == 3:
@@ -49,4 +61,5 @@ def parseDHCPPacket(ts, eth):
             }
         }
     except Exception as e:
+        logger.error('dhcp parse exception: %s' % str(e))
         return None
