@@ -6,7 +6,7 @@ uuid = 'vendor-123'
 level = 'device'
 
 vendor_file = 'thirdparty/plugins/vendor/mac_vendor'
-with open(vendor_file,'r') as fp:
+with open(vendor_file, 'r', encoding="utf-8") as fp:
     vendor_data = fp.readlines()
 vendors = {}
 for vnd in vendor_data:
@@ -32,27 +32,20 @@ def processDevice(device, manual=False):
         'vendor': vendor
     }
     
-import httplib
+import requests
 
-host = 'api.macvendors.com'
-
-def isAPIError(data):
-    try:
-        json.loads(data)
-        return True
-    except Exception:
-        return False
+url = 'https://api.macvendors.com'
 
 def getVendorFromAPI(macAddress):
     api = "/%s" % macAddress
-    conn = httplib.HTTPSConnection(host)
-    conn.request("GET", api)
-    response = conn.getresponse()
-    data = response.read()
-    if isAPIError(data):
+    try:
+        data = requests.get(url).text
+        if not data:
+            logger.error('API ERROR')
+        return data
+    except Exception as e:
         logger.error('API ERROR')
         return None
-    return data
 
 def getVendorFromFile(macAddress):
     if not macAddress:

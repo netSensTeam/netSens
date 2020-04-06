@@ -9,7 +9,7 @@ def setLogger(lgr):
     logger = lgr
 
 import json
-import httplib
+import requests
 
 key = '1a59215c58c85c7555523e153e4b991134934587'
 host = 'api.fingerbank.org'
@@ -32,10 +32,8 @@ def processDevice(device, manual=True):
     headers = {
         "Content-type": "application/json"
     }
-    conn = httplib.HTTPSConnection(host)
-    conn.request("GET", api, encoded_data, headers)
-    response = conn.getresponse()
-    data = json.loads(response.read())
+    response = requests.get(api, data=encoded_data)
+    data = response.json()
     if 'errors' in data:
         logger.error('error in fingerbank reponse: %s', str(data['errors']))
         return None

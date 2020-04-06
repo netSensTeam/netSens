@@ -1,9 +1,9 @@
 import logging
 import time
 import uuid
-from link import Link
-from alert import Alert
-from device import *
+from entities.link import Link
+from entities.alert import Alert
+from entities.device import *
 import models
 
 logger = logging.getLogger('network')
@@ -172,6 +172,11 @@ class Network(models.Model):
                 return device
         return None
 
+    def removeDeviceRole(self, devUUID, role):
+        device = self.findDevice(devUUID)
+        if device:
+            device.removeRole(role)
+            
     def addDeviceRoles(self, devUUID, roles):
         device = self.findDevice(devUUID)
         if device:

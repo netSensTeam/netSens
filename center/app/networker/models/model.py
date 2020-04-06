@@ -6,8 +6,8 @@ import time
 import uuid
 import json
 import os
-from utils import *
-from deserialize import *
+from models.utils import *
+from models.deserialize import *
 logger = logging.getLogger('model')
 
 def generateField(field_gen, time):

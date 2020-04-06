@@ -30,7 +30,7 @@ dirlist = [
 for d in dirlist:
 	dir = os.path.join(root_dir, d)
 	if not os.path.exists(dir):
-		print 'creating dir: %s' % dir
+		print('creating dir: %s' % dir)
 		os.mkdir(dir)
 
 # prepare env file for web.py
@@ -44,7 +44,7 @@ shutil.copyfile('app/web/env_%s.py' % env_file, 'app/web/env.py')
 
 
 for service in services:
-	print 'starting service: %s' % service['name']
+	print('starting service: %s' % service['name'])
 	os.chdir(service['execPath'])
 	cmd = service['cmd'].replace('%rd%', root_dir).split(' ')
 	subprocess.Popen(cmd, shell=True)

@@ -91,7 +91,7 @@
                                     {{role}}
                                 </td>
                                 <td>
-                                    <button ng-click='removeRole(device, role);'>
+                                    <button ng-click='removeRole(device.uuid, role);'>
                                         -
                                     </button>
                                 </td>
@@ -125,7 +125,7 @@
                         <button ng-click="addComment(device.uuid,device.comment);">
                             Comment
                         </button>
-                        <button ng-click="closeDevice(device.idx);">
+                        <button ng-click="closeDevice(device.uuid);">
                             Close
                         </button>
                         <button

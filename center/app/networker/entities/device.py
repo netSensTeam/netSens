@@ -1,7 +1,7 @@
 import uuid
-import packet_counter
+from entities.packet_counter import PacketCounter
 from collections import OrderedDict
-from device_match import *
+from entities.device_match import *
 import models
 
 class Device(models.Model):
@@ -54,6 +54,9 @@ class Device(models.Model):
     
     def addRoles(self, roles):
         self.roles = list(set(self.roles) | set(roles))
+        
+    def removeRole(self, role):
+        self.roles.remove(role)
 
     def removeRoles(self, roles):
         self.roles = list(set(self.roles).difference(set(roles)))

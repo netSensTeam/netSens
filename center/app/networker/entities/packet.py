@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from packet_aspect import PacketAspect
+from entities.packet_aspect import PacketAspect
 import models
 class Packet(models.Model):
     def __init__(self, packet):

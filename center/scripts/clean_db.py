@@ -11,18 +11,18 @@ if len(sys.argv) == 3:
 elif len(sys.argv) == 2:
 	mhost = sys.argv[1]
 	
-print 'Connecting to %s:%d/%s...' % (mhost, mport, mdb)
+print('Connecting to %s:%d/%s...' % (mhost, mport, mdb))
 client = pymongo.MongoClient(mhost, mport)
 
 try:
 	client.server_info()
 except Exception, e:
-	print 'Unable to connect to host'
+	print('Unable to connect to host')
 	sys.exit(0)
 # if not mdb in client.list_database_names():
 	# print 'No db %s on host. Exiting' % mdb
 	
-print 'Dropping collections...'
+print('Dropping collections...')
 for collection in client[mdb].collection_names():
-	print 'Dropping collection %s' % collection
+	print('Dropping collection %s' % collection)
 	client[mdb][collection].drop()

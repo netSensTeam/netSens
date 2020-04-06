@@ -18,6 +18,8 @@ def getPackageFiles(dir):
 
 def load(webApp, dbClient, mqClient, env):
     for ename in getPackageFiles('web/endpoints'):
+        if ename == '__pycache__':
+            continue
         logger.info('loading endpoint %s', ename)
         try:
             module = importlib.import_module('endpoints.' + ename)

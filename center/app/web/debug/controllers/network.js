@@ -5,13 +5,13 @@ oraApp.controller('networkController', [
         $scope.network = null;
         $scope.currentTab = 'devices';
 
-        $scope.rename = function() {
-            let name = prompt('Select name:', $scope.network.name);            
+        $scope.rename = function () {
+            let name = prompt('Select name:', $scope.network.name);
             let url = $scope.apis['renameNetwork'].replace('<name>', name);
             axios.post(url).then(() => {});
         }
 
-        $scope.removeNetwork = function() {
+        $scope.removeNetwork = function () {
             let url = $scope.apis['removeNetwork'];
             axios.post(url).then(() => {});
             $scope.exitNetwork();
@@ -19,10 +19,10 @@ oraApp.controller('networkController', [
         $scope.analysisIdx = -1;
         $scope.analysisPackets = null;
 
-        $scope.getAnalysisData = function(device) {
+        $scope.getAnalysisData = function (device) {
             console.log(device.uuid);
             let url = $scope.apis['devAnalysis'].replace('<devUUID>', device.uuid);
-            axios.get(url).then((response)=> {
+            axios.get(url).then((response) => {
                 if (!response.success) return;
                 $scope.analysisIdx = device.idx;
                 $scope.analysisPackets = response.packets;
@@ -41,18 +41,18 @@ oraApp.controller('networkController', [
             console.log('unload session');
             $rootScope.$emit('exitNetwork');
         }
-        $scope.reset = function() {
+        $scope.reset = function () {
             $scope.trackIdxs = [-1, -1, -1];
             $scope.network = null;
             $scope.analysisIdx = -1;
             $scope.analysisPackets = [];
         }
-        $scope.usePlugin = function(dev_uuid, plugin_uuid) {
+        $scope.usePlugin = function (dev_uuid, plugin_uuid) {
             console.log('plugin');
             let url = $scope.apis['plugins'];
             url = url.replace('<devUUID>', dev_uuid);
             url = url.replace('<pluginUUID>', plugin_uuid);
-            axios.post(url).then(()=>{});
+            axios.post(url).then(() => {});
         }
         $scope.fetch = function () {
             let url = $scope.apis['network'];
@@ -78,15 +78,24 @@ oraApp.controller('networkController', [
                 }
             );
         }
-        $scope.addRole = function(devUUID) {
+
+        $scope.removeRole = function(devId, role) {
+            console.log('Remove role for device ' + devId);
+            let url = $scope.apis['removeRole']
+                .replace('<devId>', devId.toString())
+                .replace('<role>', role.toString());
+            axios.post(url).then(() => {});
+        }
+
+        $scope.addRole = function (devUUID) {
             let role = prompt('Role:');
             if (!role) return;
             let url = $scope.apis['addRoles']
-                            .replace('devUUID', devUUID)
-                            .replace('roles', role);
-            axios.post(url).then(()=>{})
+                .replace('<devUUID>', devUUID.toString())
+                .replace('<roles>', role);
+            axios.post(url).then(() => {})
         }
-        $scope.buildGraph = function() {
+        $scope.buildGraph = function () {
             let g = new sigma('graph');
             for (let dev in $scope.network.devices) {
                 g.graph.addNode({
@@ -111,14 +120,15 @@ oraApp.controller('networkController', [
             $scope.currentTab = 'sensors';
             $scope.apis = {
                 'network': '/api/networks/' + networkId,
-                'commentDevice': '/api/networks/' + networkId + '/devices/<devIdx>/comment',
-                'closeDevice': '/api/networks/' + networkId + '/devices/<devIdx>/close',
+                'commentDevice': '/api/networks/' + networkId + '/devices/<devId>/comment',
+                'closeDevice': '/api/networks/' + networkId + '/devices/<devId>/close',
                 'clearNetwork': '/api/networks/' + networkId + '/clear',
                 'devAnalysis': '/api/networks/' + networkId + '/devices/<devUUID>/analyze',
                 'renameNetwork': '/api/networks/' + networkId + '/rename/<name>',
                 'removeNetwork': '/api/networks/' + networkId + '/remove',
                 'plugins': '/api/networks/' + networkId + '/devices/<devUUID>/plugins/<pluginUUID>',
-                'addRoles': '/api/networks/' + networkId + '/devices/<devUUID>/roles/<roles>'
+                'addRoles': '/api/networks/' + networkId + '/devices/<devUUID>/roles/<roles>',
+                'removeRole': '/api/networks/' + networkId + '/devices/<devId>/roles/remove/<role>'
             };
             console.log('network loaded');
 
@@ -134,52 +144,48 @@ oraApp.controller('networkController', [
         $scope.untrack = function () {
             $scope.trackIdxs = [-1, -1, -1];
         }
-        $scope.clearNetwork = function() {
+        $scope.clearNetwork = function () {
             let url = $scope.apis['clearNetwork'];
-            axios.post(url).then(function(response) {});
+            axios.post(url).then(function (response) {});
         }
 
-        $scope.fingerBankAnalyze = function(devId) {
+        $scope.fingerBankAnalyze = function (devId) {
             let url = $scope.apis['fingerBank']
             url = url.replace('<devIdx>', devId.toString())
             axios.post(url).then(
-                function(response) {
-                }
+                function (response) {}
             )
 
         }
-	$scope.macVendors = function(devId) {
+        $scope.macVendors = function (devId) {
             let url = $scope.apis['macVendors']
             url = url.replace('<devIdx>', devId.toString())
             axios.post(url).then(
-                function(response) {
-                }
+                function (response) {}
             )
 
         }
-	$scope.isNoVendorPresent = function(vendor){
-		return (vendor == null)
-	}
-	$scope.dhcpFpPresent = function(dhcp_fp){
-		return ((dhcp_fp != null) && (dhcp_fp[0].length != 0))
-	}
-        $scope.closeDevice = function(devId) {
+        $scope.isNoVendorPresent = function (vendor) {
+            return (vendor == null)
+        }
+        $scope.dhcpFpPresent = function (dhcp_fp) {
+            return ((dhcp_fp != null) && (dhcp_fp[0].length != 0))
+        }
+        $scope.closeDevice = function (devId) {
             let url = $scope.apis['closeDevice']
-            url = url.replace('<devIdx>', devId.toString())
+            url = url.replace('<devId>', devId.toString())
             axios.post(url).then(
-                function(response) {
-                }
+                function (response) {}
             )
         }
         $scope.addComment = function (devId, currComment) {
             let url = $scope.apis['commentDevice']
-            url = url.replace('<devIdx>', devId.toString());
+            url = url.replace('<devId>', devId.toString());
             comment = prompt('Add a comment:', currComment);
             axios.post(url, {
                 comment
             }).then(
-                function (response) {
-                }
+                function (response) {}
             )
         }
         $scope.visualize = function () {

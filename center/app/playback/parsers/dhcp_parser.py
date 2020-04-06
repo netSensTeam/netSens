@@ -1,5 +1,5 @@
 import dpkt
-from utils import *
+from parsers.utils import *
 name = 'dhcp_parser'
 
 def parseFunc(ts, eth):

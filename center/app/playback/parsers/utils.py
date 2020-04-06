@@ -5,8 +5,9 @@ def getMACString(mac_addr):
             separated string"""
         mac_addr = binascii.hexlify(mac_addr)
         s = list()
-        for i in range(12/2) :  # mac_addr should always be 12 chars, we work in groups of 2 chars
-                s.append( mac_addr[i*2:i*2+2] )
+        for i in range(6):  # mac_addr should always be 12 chars, we work in groups of 2 chars
+                pair = mac_addr[2*i:2*i+2].decode("utf-8").upper()
+                s.append(pair)
         r = ":".join(s)
         return r.upper()
 

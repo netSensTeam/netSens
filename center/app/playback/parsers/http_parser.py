@@ -1,5 +1,5 @@
 import dpkt
-from utils import *
+from parsers.utils import *
 name = 'http_parser'
 
 def parseFunc(ts, eth):
@@ -17,7 +17,7 @@ def parseHTTPPacket(ts, eth):
         request = dpkt.http.Request(tcp.data)
         src = getMACString(eth.src)
         description = 'http request from %s' % src
-        print 'HTTP request: %s\n' % repr(request)
+        print('HTTP request: %s\n' % repr(request))
         
         return {
             'protocol': 'http',

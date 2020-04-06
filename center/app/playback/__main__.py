@@ -32,21 +32,25 @@ def onPlaybackRequest(req):
 
 def playFile(filename, origin):
     global mqc
-    filepath = os.path.join(env.pbak_folder, filename)
-    packets = parsePCAP(filepath, origin)
+    try:
+        logger.info('Parsing file: %s' % filename)
+        filepath = os.path.join(env.pbak_folder, filename)
+        packets = parsePCAP(filepath, origin)
 
-    packetsBuffer = {
-        'time': time.time(),
-        'origin': origin,
-        'numPackets': len(packets),
-        'packets': packets
-    }
-    dmp_file = os.path.join(env.output_folder, 'pb-%s.json' % filename)
-    with open(dmp_file, 'w') as f:
-        json.dump(packetsBuffer,f,indent=4)
-    mqc.publish('packetsBuffer', packetsBuffer)
-    logger.info('pcap file parsed and published to processor')
-    
+        packetsBuffer = {
+            'time': time.time(),
+            'origin': origin,
+            'numPackets': len(packets),
+            'packets': packets
+        }
+        logger.info('File parsed successfuly')
+        dmp_file = os.path.join(env.output_folder, 'pb-%s.json' % filename)
+        with open(dmp_file, 'w') as f:
+            json.dump(packetsBuffer,f,indent=4)
+        mqc.publish('packetsBuffer', packetsBuffer)
+        logger.info('pcap file parsed and published to processor')
+    except Exception as e:
+        logger.error(str(e))
     
 try:
     mqc = MQClient(env)
