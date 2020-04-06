@@ -43,7 +43,7 @@ def playFile(filename, origin):
             'numPackets': len(packets),
             'packets': packets
         }
-        logger.info('File parsed successfuly')
+        logger.info('Parsed %d packets from file' % packetsBuffer['numPackets'])
         dmp_file = os.path.join(env.output_folder, 'pb-%s.json' % filename)
         with open(dmp_file, 'w') as f:
             json.dump(packetsBuffer,f,indent=4)
