@@ -55,9 +55,18 @@ def process(packets_buffer):
     start_time = time.time()
     network_queue = []
     org_uuid = packets_buffer['origin']
+
+    packet_convert_time = time.time()
     packets = [Packet(pkt) for pkt in packets_buffer['packets']]
-    dest_uuid = getDestinationNetwork(org_uuid)
-    with NetworkLock(dest_uuid) as net:
+    elapsed_time = time.time() - packet_convert_time
+    logger.debug('Packet parsing time is %f seconds' % elapsed_time)
+
+    if 'target' in packets_buffer and packets_buffer['target']:
+        target_uuid = packets_buffer['target']
+    else:
+        target_uuid = getTargetNetwork(org_uuid)
+    
+    with NetworkLock(target_uuid) as net:
         net_start_time = time.time()
         net.process(packets)
         elapsed_time = time.time() - net_start_time
@@ -71,14 +80,14 @@ def process(packets_buffer):
 
     publishAlteredNetworks(altered_networks)
     
-def getDestinationNetwork(org_uuid):
-    dest_uuid = getNetworkForOrigin(org_uuid)
-    if not dest_uuid:
+def getTargetNetwork(org_uuid):
+    target_uuid = getNetworkForOrigin(org_uuid)
+    if not target_uuid:
         net = Network.create()
-        dest_uuid = net.uuid
+        target_uuid = net.uuid
         db_client.addNetwork(net.serialize())
-        addOriginNetwork(dest_uuid, org_uuid)
-    return dest_uuid
+        addOriginNetwork(target_uuid, org_uuid)
+    return target_uuid
 
 def publishAlteredNetworks(altered_networks):
     for uuid in altered_networks:

@@ -63,8 +63,11 @@
 </h1>
 
 <input type="file" id="file" name="file">
-<button ng-click="uploadFile();">Upload</button>
-
+<button ng-click="uploadFile(uploadTargetNetworkId);">Upload</button>
+<select ng-model="uploadTargetNetworkId">
+    <option value="auto" selected>Auto</option>
+    <option ng-repeat="network in networks" value="{{network.uuid}}">{{network.name}}</option>
+</select>
 <h1>Services</h1>
 <table>
     <thead>

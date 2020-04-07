@@ -28,9 +28,14 @@ def onLivePCAP(req):
 
 def onPlaybackRequest(req):
     logger.info('New playback request')
-    playFile(req['file'], req['file'])
+    if req['targetNetworkId'] == 'auto':
+        target = None
+    else:
+        target = req['targetNetworkId']
 
-def playFile(filename, origin):
+    playFile(req['file'], req['file'], targetNetworkId=target)
+
+def playFile(filename, origin, targetNetworkId=None):
     global mqc
     try:
         logger.info('Parsing file: %s' % filename)
@@ -40,6 +45,7 @@ def playFile(filename, origin):
         packetsBuffer = {
             'time': time.time(),
             'origin': origin,
+            'target': targetNetworkId,
             'numPackets': len(packets),
             'packets': packets
         }
@@ -50,7 +56,7 @@ def playFile(filename, origin):
         mqc.publish('packetsBuffer', packetsBuffer)
         logger.info('pcap file parsed and published to processor')
     except Exception as e:
-        logger.error(str(e))
+        logger.error('error processing pcap file: %s' % str(e))
     
 try:
     mqc = MQClient(env)

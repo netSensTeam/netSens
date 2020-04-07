@@ -4,7 +4,7 @@ import uuid
 import os
 name = 'playback'
 pbak_folder = '../data/playback'
-url = '/api/playback'
+url = '/api/playback/<target_uuid>'
 methods = ['POST']
 db_client = None
 mq_client = None
@@ -29,5 +29,5 @@ def handle(path_data, request_data):
     filename = '%s-%s.%s' % (fileparts[0], uuid.uuid4().hex, fileparts[1])
     logger.info('uploading file: %s', filename)
     file.save(os.path.join(pbak_folder, filename))
-    mq_client.publish('playbackRequest', {'file':filename})
+    mq_client.publish('playbackRequest', {'file':filename, 'targetNetworkId': path_data['target_uuid']})
     return dumps({'success': True}), 200
