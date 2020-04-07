@@ -36,7 +36,7 @@ class Network(models.Model):
         self.links = []
         self.packets = []
 
-    def addPacket(self, pkt):
+    def countPacket(self, pkt):
         pkt.network_id = self.uuid
         pkt.idx = self.packet_idx
         self.packet_idx += 1
@@ -44,9 +44,9 @@ class Network(models.Model):
         self.packet_counter.add(pkt.protocol)
 
     def processPacket(self, pkt):
-        self.addPacket(pkt)
+        self.countPacket(pkt)
         for aspect in pkt.aspects:
-            logger.debug('aspect: %s', aspect.serialize())
+            # logger.debug('aspect: %s', aspect.serialize())
             self.processAspect(aspect, pkt.time)
     
     def processAspect(self, asp, time):
