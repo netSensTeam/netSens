@@ -33,16 +33,23 @@ def createDefaultField(field, presets):
         ctor = module.__getattribute__(field['class'])
         return ctor()
 
+schema_cache = {}
+def loadSchemaFromFile(schema_file):
+    if not schema_file in schema_cache:
+        logger.debug('%s not in schemas cache. loading from disk...' % schema_file)
+        curr_dir = os.path.dirname(os.path.abspath(__file__))
+        schema_path = os.path.join(curr_dir, 'schemas', schema_file)
+        with open(schema_path, 'r') as fp:
+            schema_cache[schema_file] = json.load(fp)
+    return schema_cache[schema_file]
+
+
 class Model(object):
     def __init__(self, schema=None, schema_file=None, data=None, presets=None):
-        
         if schema:
             self.schema = schema
         elif schema_file:
-            curr_dir = os.path.dirname(os.path.abspath(__file__))
-            schema_path = os.path.join(curr_dir, 'schemas', schema_file)
-            with open(schema_path, 'r') as fp:
-                self.schema = json.load(fp)
+            self.schema = loadSchemaFromFile(schema_file)
         else:
             raise Exception('No schema file supplied')
         self.schema_name = self.schema.get('$name', 'Model')
