@@ -23,7 +23,7 @@ try:
     mqc = MQClient(env)
     dbc = DBClient(env)
     network_lock.init(dbc)
-    processor.load(mqc, dbc, network_lock.lock)
+    processor.load(mqc, dbc, network_lock.lock, env)
     logger.info('Networker is up')
     keepalive.start(mqc, 'networker')
 except KeyboardInterrupt:
