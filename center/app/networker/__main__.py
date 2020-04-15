@@ -1,20 +1,17 @@
 import env
 import sys
-sys.path.append(env.infra_path)
-sys.path.append('models')
-sys.path.append('entities')
+sys.path.extend(['models','entities',env.infra_path])
 
-from importlib import import_module
 import logging
 import signal
 import keepalive
-import network_lock
+from network_lock import NetworkLock
 from mq import MQClient
 from db import DBClient
 
 import mlog
 import os
-import processor
+import processorsManager
 
 mlog.configLoggers(['main', 'network', 'proc', 'mq', 'db', 'model'], env.logs_folder, env.debug_mode)
 logger = logging.getLogger('main')
@@ -22,11 +19,11 @@ logger = logging.getLogger('main')
 try:
     mqc = MQClient(env)
     dbc = DBClient(env)
-    network_lock.init(dbc)
-    processor.load(mqc, dbc, network_lock.lock, env)
+    nlock = NetworkLock(dbc)
+    processorsManager.loadProcessors(mqc, dbc, nlock, env)
     logger.info('Networker is up')
     keepalive.start(mqc, 'networker')
 except KeyboardInterrupt:
-    pass
+    logger.info('Networker process was closed by user')
 except Exception as e:
     logger.fatal(str(e))

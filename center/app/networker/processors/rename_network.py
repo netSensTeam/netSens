@@ -1,18 +1,12 @@
-name = 'rename_network'
-topic = 'renameNetwork'
+from processors import _processor as processor
 
-NetworkLock = None
-logger = None
-
-def init(mq, db, nlock, lgr):
-    global NetworkLock, logger
-    NetworkLock = nlock
-    logger = lgr
-
-def process(data):
-    global NetworkLock
-    uuid = data['uuid']
-    name = data['name']
-    with NetworkLock(uuid) as net:
-        if net:
-            net.name = name
+@processor.register('renameNetwork')
+class DeviceRemoveRoleProcessor(processor.Processor):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+    def process(self, data):
+        uuid = data['uuid']
+        with self.networkLock(data['uuid']):
+            if net:
+                net.name = data['name']
