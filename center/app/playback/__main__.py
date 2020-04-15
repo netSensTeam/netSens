@@ -32,10 +32,14 @@ def onPlaybackRequest(req):
         target = None
     else:
         target = req['targetNetworkId']
+    
+    persist = True
+    if 'persist' in req:
+        persist = req['persist']
+        
+    playFile(req['file'], req['file'], targetNetworkId=target, persist=persist)
 
-    playFile(req['file'], req['file'], targetNetworkId=target)
-
-def playFile(filename, origin, targetNetworkId=None):
+def playFile(filename, origin, targetNetworkId=None, persist=True):
     global mqc
     try:
         logger.info('Parsing file: %s' % filename)
@@ -47,7 +51,8 @@ def playFile(filename, origin, targetNetworkId=None):
             'origin': origin,
             'target': targetNetworkId,
             'numPackets': len(packets),
-            'packets': packets
+            'packets': packets,
+            'persist': persist
         }
         logger.info('Parsed %d packets from file' % packetsBuffer['numPackets'])
         dmp_file = os.path.join(env.output_folder, 'pb-%s.json' % filename)

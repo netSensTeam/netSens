@@ -35,16 +35,17 @@ class Network(models.Model):
         self.devices = []
         self.links = []
         self.packets = []
-
-    def countPacket(self, pkt):
+    
+    def countPacket(self, pkt, save=True):
         pkt.network_id = self.uuid
         pkt.idx = self.packet_idx
         self.packet_idx += 1
-        self.packets.append(pkt)
+        if save:
+            self.packets.append(pkt)
         self.packet_counter.add(pkt.protocol)
 
-    def processPacket(self, pkt):
-        self.countPacket(pkt)
+    def processPacket(self, pkt, save=True):
+        self.countPacket(pkt, save=save)
         for aspect in pkt.aspects:
             # logger.debug('aspect: %s', aspect.serialize())
             self.processAspect(aspect, pkt.time)
@@ -72,6 +73,9 @@ class Network(models.Model):
             self.ip_proc_queue.append(asp.target)
 
     def mergeNetwork(self, net):
+        self.packetCounter.merge(net.packetCounter)
+        self.packets.extend(net.packets)
+            
         logger.debug('merging network')
         for device in net.devices:
             self.dev_proc_queue.append(device)
@@ -81,10 +85,10 @@ class Network(models.Model):
             self.mergeTarget(mac, net.targets[mac])
         self.process_queues()
 
-    def process(self, packets):
+    def process(self, packets, save=True):
         logger.debug('creating packet device')
         for pkt in packets:
-            self.processPacket(pkt)
+            self.processPacket(pkt, save=save)
         
         self.process_queues()
     

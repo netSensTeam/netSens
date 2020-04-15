@@ -66,9 +66,18 @@ def process(packets_buffer):
     else:
         target_uuid = getTargetNetwork(org_uuid)
     
+    if 'persist' in packets_buffer:
+        save = packets_buffer['persist']
+    else:
+        save = True
+    if save:
+        logger.info('Packets will be persisted to DB')
+    else:
+        logger.info('Packets will not be persisted to DB')
+    
     with NetworkLock(target_uuid) as net:
         net_start_time = time.time()
-        net.process(packets)
+        net.process(packets, save=save)
         elapsed_time = time.time() - net_start_time
         logger.debug('Processing time for new network was %f seconds' % elapsed_time)
         if net.reprocess:

@@ -4,7 +4,7 @@ import uuid
 import os
 name = 'playback'
 pbak_folder = '../data/playback'
-url = '/api/playback/<target_uuid>'
+url = '/api/playback/<target_uuid>/<save_packet>'
 methods = ['POST']
 db_client = None
 mq_client = None
@@ -25,9 +25,14 @@ def handle(path_data, request_data):
     if file.filename == '':
         logger.error('No file in request')
         return dumps({'success': False, 'error': 'No file selected'}), 400
+    if path_data['save_packet'] == 'save':
+        persist = True
+    else:
+        persist = False
+        
     fileparts = file.filename.split('.')
     filename = '%s-%s.%s' % (fileparts[0], uuid.uuid4().hex, fileparts[1])
     logger.info('uploading file: %s', filename)
     file.save(os.path.join(pbak_folder, filename))
-    mq_client.publish('playbackRequest', {'file':filename, 'targetNetworkId': path_data['target_uuid']})
+    mq_client.publish('playbackRequest', {'file':filename, 'targetNetworkId': path_data['target_uuid'], 'persist': persist})
     return dumps({'success': True}), 200

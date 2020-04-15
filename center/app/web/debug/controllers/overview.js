@@ -5,14 +5,21 @@ oraApp.controller(
         $scope.listeners = [];
         $scope.view = true;
 
-        $scope.uploadFile = function(targetNetworkId) {
-            var f = document.getElementById('file').files[0];
-            var fd = new FormData();
+        $scope.uploadFile = function(targetNetworkId, savePacketsToDB) {
+            let f = document.getElementById('file').files[0];
+            let fd = new FormData();
             fd.append("file", f);
-            var config = { headers: { 'Content-Type': undefined },
+            let config = { headers: { 'Content-Type': undefined },
                            transformResponse: angular.identity
                          };
-            $http.post('/api/playback/' + targetNetworkId, fd, config).success(() => {
+                         
+            let url = '/api/playback/' + targetNetworkId;
+            if (savePacketsToDB) {
+                url += '/save';
+            } else {
+                url += '/nsave';
+            }
+            $http.post(url, fd, config).success(() => {
 
             });
         }

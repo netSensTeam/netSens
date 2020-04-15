@@ -37,7 +37,7 @@ class DBClient:
                 'defaultGTWMAC': 1,
                 'deviceCount': {'$size': '$devices'},
                 'linkCount': {'$size': '$links'},
-                'packetCount': {'$size': '$packets'}
+                'packetCount': '$packetCounter.total'
             }
         }])
         
