@@ -46,5 +46,8 @@ export class NetSensProxyService {
 
   deleteNetwork(networkId:string) {
     console.log('Deleting network');
+    this.http.delete('http://localhost:8000/api/networks/' + networkId).subscribe(
+      () => {console.log('delete requested'); }
+    )
   }
 }

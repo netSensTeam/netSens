@@ -7,7 +7,7 @@ class DeviceRemoveRoleProcessor(processor.Processor):
         name = data['name']
         with self.networkLock(uuid) as net:
             if net:
-                self.logger(f'Renaming network {net.name} to {name}')
+                self.logger.debug(f'Renaming network {net.name} to {name}')
                 net.name = name
             else:
                 self.logger.error(f'Cannot rename network {uuid}: not found')

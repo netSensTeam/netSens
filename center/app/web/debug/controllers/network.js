@@ -7,7 +7,8 @@ oraApp.controller('networkController', [
 
         $scope.rename = function () {
             let name = prompt('Select name:', $scope.network.name);
-            axios.post(url, {name:name}).then(() => {});
+            let url = $scope.apis['renameNetwork'];
+            axios.post(url, {name}).then(() => {});
         }
 
         $scope.removeNetwork = function () {
@@ -87,11 +88,12 @@ oraApp.controller('networkController', [
         }
 
         $scope.addRole = function (devUUID) {
-            let role = prompt('Role:');
-            if (!role) return;
+            let input = prompt('Role:');
+            if (!input) return;
+            let roles = input.split(',');
             let url = $scope.apis['addRoles']
                 .replace('<devUUID>', devUUID.toString());
-            axios.post(url, {roles: role.split(',')}).then(() => {})
+            axios.post(url, {roles}).then(() => {})
         }
         $scope.buildGraph = function () {
             let g = new sigma('graph');

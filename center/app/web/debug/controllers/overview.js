@@ -58,7 +58,7 @@ oraApp.controller(
         };
         $scope.renameNetwork = function(uuid, name) {
             name = prompt('Choose name:', name);
-            axios.post('/api/networks/'+uuid+'/rename/'+name).then(()=>{})
+            axios.post('/api/networks/'+uuid+'/rename', {name}).then(()=>{})
         }
         $scope.clearNetwork = function(uuid) {
             console.log('clear network')
