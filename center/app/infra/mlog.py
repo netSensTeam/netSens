@@ -9,7 +9,7 @@ def createLogger(name, logs_folder=None, debug_mode=True):
     logger = logging.getLogger(name)
 
     if logs_folder:
-            filename = '%s/%s_%d.log' % (logs_folder,name.lower(),time.time())
+            filename = f'{logs_folder}/{name.lower()}.log'
 
     debugFormatter = logging.Formatter(
         '%(asctime)s %(name)-12s {%(filename)s:%(lineno)d} %(levelname)-8s %(message)s'

@@ -5,11 +5,8 @@ from processors import _processor as processor
 
 @processor.register('packetsBuffer')
 class PacketsBufferProcessor(processor.Processor):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-    def process(self, data):
-        logger.info('Processing new packet buffer with %d packets' % packets_buffer['numPackets'])
+    def process(self, packets_buffer):
+        self.logger.info('Processing new packet buffer with %d packets' % packets_buffer['numPackets'])
         start_time = time.time()
         network_queue = []
         org_uuid = packets_buffer['origin']
@@ -17,35 +14,35 @@ class PacketsBufferProcessor(processor.Processor):
         packet_convert_time = time.time()
         packets = [Packet(pkt) for pkt in packets_buffer['packets']]
         elapsed_time = time.time() - packet_convert_time
-        logger.debug('Packet parsing time is %f seconds' % elapsed_time)
+        self.logger.debug(f'Packet parsing time is {elapsed_time} seconds')
 
         if 'target' in packets_buffer and packets_buffer['target']:
             target_uuid = packets_buffer['target']
         else:
-            target_uuid = getTargetNetwork(org_uuid)
+            target_uuid = self.getTargetNetwork(org_uuid)
         
         if 'persist' in packets_buffer:
             save = packets_buffer['persist']
         else:
             save = True
         if save:
-            logger.info('Packets will be persisted to DB')
+            self.logger.info('Packets will be persisted to DB')
         else:
-            logger.info('Packets will not be persisted to DB')
+            self.logger.info('Packets will not be persisted to DB')
         
         with self.networkLock(target_uuid) as net:
             net_start_time = time.time()
             net.process(packets, save=save)
             elapsed_time = time.time() - net_start_time
-            logger.debug('Processing time for new network was %f seconds' % elapsed_time)
+            self.logger.debug(f'Processing time for new network was {elapsed_time} seconds')
             if net.reprocess:
                 network_queue.append(net)
                 net.reprocess = False
         altered_networks = self.processNetworkQueue(network_queue)
         elapsed_time = time.time() - start_time
-        logger.debug('Total processing time was %f seconds. Number of altered networks was %d' % (elapsed_time, len(altered_networks)))
+        self.logger.debug(f'Total processing time was {elapsed_time} seconds. Number of altered networks was {len(altered_networks)}')
 
-        publishAlteredNetworks(altered_networks)
+        self.publishAlteredNetworks(altered_networks)
 
     def findNetworkMatch(self, net):
         if not net.gateways:
@@ -80,10 +77,11 @@ class PacketsBufferProcessor(processor.Processor):
             },
             upsert=False)
 
-    def getTargetNetwork(org_uuid):
+    def getTargetNetwork(self, org_uuid):
         target_uuid = self.getNetworkForOrigin(org_uuid)
         if not target_uuid:
             net = Network.create()
+            self.logger.debug('No target network was found, creating new network {net.uuid}')
             target_uuid = net.uuid
             self.dbClient.addNetwork(net.serialize())
             self.addOriginNetwork(target_uuid, org_uuid)

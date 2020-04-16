@@ -11,29 +11,29 @@
 	},
 	{
 		"name": "WEB",
-		"execPath": "app",
-		"cmd": "python web"
+		"execPath": "app/web",
+		"cmd": "python __main__.py"
 	},
 	{
 		"active": true,
 		"name": "PLAYBACK",
-		"execPath": "app",
-		"cmd": "python playback"
+		"execPath": "app/playback",
+		"cmd": "python __main__.py"
 	},
 	{
 		"name": "NETWORKER",
-		"execPath": "app",
-		"cmd": "python networker"
+		"execPath": "app/networker",
+		"cmd": "python __main__.py"
 	},
 	{
 		"name": "MONITOR",
-		"execPath": "app",
-		"cmd": "python monitor"
+		"execPath": "app/monitor",
+		"cmd": "python __main__.py"
 	},
 	{
 		"active": true,
 		"name": "THIRD_PARTY",
-		"execPath": "app",
-		"cmd": "python thirdparty"
+		"execPath": "app/thirdparty",
+		"cmd": "python __main__.py"
 	}
 ]

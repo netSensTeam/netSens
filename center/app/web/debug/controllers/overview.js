@@ -67,7 +67,7 @@ oraApp.controller(
         
         $scope.removeNetwork = function(uuid) {
             console.log('remove network')
-            axios.post('/api/networks/' + uuid + '/remove').then(() => {})
+            axios.delete('/api/networks/' + uuid).then(() => {})
         };
 
         $scope.connectListener = function(mac, guid) {

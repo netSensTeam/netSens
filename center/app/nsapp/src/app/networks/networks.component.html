@@ -1,0 +1,30 @@
+<table class="table table-light">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Created</th>
+            <th>Updated</th>
+            <th>Default GTW</th>
+            <th>#Devices</th>
+            <th>#Links</th>
+            <th>#Packets</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let network of networks">
+            <td>{{truncString(network.name)}}</td>
+            <td>{{network.createTime}}</td>
+            <td>{{network.lastUpdateTime}}</td>
+            <td>{{network.defaultGTWMAC}}</td>
+            <td>{{network.deviceCount}}</td>
+            <td>{{network.linkCount}}</td>
+            <td>{{network.packetCount}}</td>
+            <td>
+                <button class="btn btn-sm btn-primary" (click)="loadNetwork(network);">E</button>
+                <button class="btn btn-sm btn-primary" (click)="renameNetwork(network);">R</button>
+                <button class="btn btn-sm btn-danger" (click)="deleteNetwork(network);">D</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

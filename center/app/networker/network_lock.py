@@ -9,7 +9,7 @@ class NetworkLock:
         self.llock = threading.Lock()
        
     @contextlib.contextmanager
-    def __call__(self, uuid, saveBack=False):
+    def __call__(self, uuid, saveBack=True):
         with self.llock:
             if not uuid in self.network_locks:
                 self.network_locks[uuid] = threading.Lock()
@@ -19,4 +19,4 @@ class NetworkLock:
                 net = network.Network(net)
             yield net
             if net and saveBack:
-                mongo.saveNetwork(net.serialize())   
+                self.mongo.saveNetwork(net.serialize())   

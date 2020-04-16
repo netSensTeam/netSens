@@ -2,9 +2,6 @@ from processors import _processor as processor
 
 @processor.register('deviceExtraData')
 class DeviceExtraDataProcessor(processor.Processor):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
     def process(self, data):
         net_uuid = data['networkUUID']
         dev_uuid = data['deviceUUID']

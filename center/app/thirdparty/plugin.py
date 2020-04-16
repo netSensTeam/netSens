@@ -5,16 +5,11 @@ import logging
 import mlog
 from importlib import import_module
 import os
+import ns_utils
 logger = logging.getLogger('plugin')
 
 def load(mqc, dbc, env):
-    pluginNames = os.listdir('thirdparty/plugins')
-    logger.debug(pluginNames)
-    for pluginName in pluginNames:
-        if pluginName == '__init__.py' or \
-            pluginName == '__init__.pyc' or \
-                pluginName == '__pycache__': 
-            continue
+    for pluginName in ns_utils.getPackages('plugins'):
         try:
             logger.info('Loading plugin %s', pluginName)
             mdl = import_module('plugins.' + pluginName)
@@ -22,6 +17,7 @@ def load(mqc, dbc, env):
             Plugin(mdl, mqc, dbc)
         except Exception as e:
             logger.error('Failed to load plugin %s: %s', pluginName, str(e))
+            
 class Plugin:
     def __init__(self, module, mqc, dbc):
         self.logger = logging.getLogger(module.name)

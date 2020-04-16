@@ -7,13 +7,12 @@ oraApp.controller('networkController', [
 
         $scope.rename = function () {
             let name = prompt('Select name:', $scope.network.name);
-            let url = $scope.apis['renameNetwork'].replace('<name>', name);
-            axios.post(url).then(() => {});
+            axios.post(url, {name:name}).then(() => {});
         }
 
         $scope.removeNetwork = function () {
             let url = $scope.apis['removeNetwork'];
-            axios.post(url).then(() => {});
+            axios.delete(url).then(() => {});
             $scope.exitNetwork();
         }
         $scope.analysisIdx = -1;
@@ -84,16 +83,15 @@ oraApp.controller('networkController', [
             let url = $scope.apis['removeRole']
                 .replace('<devId>', devId.toString())
                 .replace('<role>', role.toString());
-            axios.post(url).then(() => {});
+            axios.delete(url).then(() => {});
         }
 
         $scope.addRole = function (devUUID) {
             let role = prompt('Role:');
             if (!role) return;
             let url = $scope.apis['addRoles']
-                .replace('<devUUID>', devUUID.toString())
-                .replace('<roles>', role);
-            axios.post(url).then(() => {})
+                .replace('<devUUID>', devUUID.toString());
+            axios.post(url, {roles: role.split(',')}).then(() => {})
         }
         $scope.buildGraph = function () {
             let g = new sigma('graph');
@@ -124,11 +122,11 @@ oraApp.controller('networkController', [
                 'closeDevice': '/api/networks/' + networkId + '/devices/<devId>/close',
                 'clearNetwork': '/api/networks/' + networkId + '/clear',
                 'devAnalysis': '/api/networks/' + networkId + '/devices/<devUUID>/analyze',
-                'renameNetwork': '/api/networks/' + networkId + '/rename/<name>',
-                'removeNetwork': '/api/networks/' + networkId + '/remove',
+                'renameNetwork': '/api/networks/' + networkId + '/rename',
+                'removeNetwork': '/api/networks/' + networkId,
                 'plugins': '/api/networks/' + networkId + '/devices/<devUUID>/plugins/<pluginUUID>',
-                'addRoles': '/api/networks/' + networkId + '/devices/<devUUID>/roles/<roles>',
-                'removeRole': '/api/networks/' + networkId + '/devices/<devId>/roles/remove/<role>'
+                'addRoles': '/api/networks/' + networkId + '/devices/<devUUID>/roles',
+                'removeRole': '/api/networks/' + networkId + '/devices/<devId>/roles/<role>'
             };
             console.log('network loaded');
 
@@ -182,9 +180,7 @@ oraApp.controller('networkController', [
             let url = $scope.apis['commentDevice']
             url = url.replace('<devId>', devId.toString());
             comment = prompt('Add a comment:', currComment);
-            axios.post(url, {
-                comment
-            }).then(
+            axios.post(url, {comment}).then(
                 function (response) {}
             )
         }

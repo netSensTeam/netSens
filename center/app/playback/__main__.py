@@ -17,7 +17,7 @@ logger = logging.getLogger('main')
 def onLivePCAP(req):
     try:
         logger.info('New live pcap file')
-        filename = '%s-%d.pcap' % (req['origin'], req['time'])
+        filename = f"{req['origin']}-{req['time']}.pcap"
         filepath = os.path.join(env.pbak_folder, filename)
         with open(filepath, 'wb+') as fp:
             logger.debug('writing pcap file to folder')
@@ -42,7 +42,7 @@ def onPlaybackRequest(req):
 def playFile(filename, origin, targetNetworkId=None, persist=True):
     global mqc
     try:
-        logger.info('Parsing file: %s' % filename)
+        logger.info(f'Parsing file: {filename}')
         filepath = os.path.join(env.pbak_folder, filename)
         packets = parsePCAP(filepath, origin)
 
@@ -54,14 +54,14 @@ def playFile(filename, origin, targetNetworkId=None, persist=True):
             'packets': packets,
             'persist': persist
         }
-        logger.info('Parsed %d packets from file' % packetsBuffer['numPackets'])
-        dmp_file = os.path.join(env.output_folder, 'pb-%s.json' % filename)
+        logger.info(f'Parsed {len(packets)} packets from file')
+        dmp_file = os.path.join(env.output_folder, f'pb-{filename}.json')
         with open(dmp_file, 'w') as f:
             json.dump(packetsBuffer,f,indent=4)
         mqc.publish('packetsBuffer', packetsBuffer)
         logger.info('pcap file parsed and published to processor')
     except Exception as e:
-        logger.error('error processing pcap file: %s' % str(e))
+        logger.error(f'error processing pcap file: {e}')
     
 try:
     mqc = MQClient(env)

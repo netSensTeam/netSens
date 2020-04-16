@@ -1,3 +1,4 @@
+import logging
 import env
 import sys
 import time
@@ -7,7 +8,6 @@ from mq import MQClient
 from db import DBClient
 import keepalive
 import mlog
-import logging
 import threading
 mlog.configLoggers(['main', 'mq'], env.logs_folder, env.debug_mode)
 

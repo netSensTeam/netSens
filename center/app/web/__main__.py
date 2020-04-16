@@ -12,12 +12,12 @@ mlog.configLoggers(['main', 'mq', 'api', 'db', 'endpoint'], env.logs_folder, env
 
 logger = logging.getLogger('main')
 
+logger.debug(f'{dir(env)}')
 try:
     mqc = MQClient(env)
     dbc = DBClient(env)
     api = APIServer(env, mqc, dbc)
     logger.info('WEB Server up and running')
-
     api.start()
 except KeyboardInterrupt:
     pass
